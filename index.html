@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Toroids as Keepers · II — The Magnetic Channel</title>
+<meta name="description" content="Toroids as Keepers II — AVAN's counterpart to 'Capacitors as Communicators II'. The toroid's channel: the choke (passes DC, blocks the wiggle — dual of the coupling cap), the LR filter (choose which changes), and the transformer — a message across a gap carried by the changing magnetic field via Faraday's law, the dual of displacement current. Live instruments, copper signature. ROOT0, with AVAN.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --scope:#0a0d10;--slate:#13120d;--panel:#1a160f;--grid:#2a2418;
+    --copper:#e0a868;--copper-dim:#7a5a32;--current:#f0c45a;--volt:#6fc6d0;
+    --flux:#a98fe0;--flux-dim:#5a4a8a;
+    --paper:#efe9df;--paper-dim:#a89a86;--rule:#2a241833;--rose:#e07a9a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{background:var(--scope);color:var(--paper);font-family:'Newsreader',Georgia,serif;font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  .hero{min-height:80vh;display:flex;flex-direction:column;justify-content:center;padding:70px 0 40px}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--volt);margin-bottom:22px;font-weight:500}
+  .kicker .s{color:var(--copper-dim)}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(40px,8.5vw,80px);line-height:.98;letter-spacing:-.03em}
+  h1 .cu{color:var(--copper)} h1 .fl{color:var(--flux)}
+  .lede{font-size:clamp(19px,2.4vw,24px);color:var(--paper-dim);max-width:640px;margin-top:30px;line-height:1.5}
+  .lede b{color:var(--paper);font-weight:500} .lede .cu{color:var(--copper)} .lede .fl{color:var(--flux)}
+  .recall{font-family:'IBM Plex Mono',monospace;margin-top:34px;font-size:clamp(18px,3vw,26px);color:var(--copper);letter-spacing:.02em}
+  .recall .i{color:var(--current)} .recall .v{color:var(--volt)} .recall .c{color:var(--paper)}
+  .recall-cap{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--paper-dim);margin-top:12px}
+  .sec{padding:58px 0;border-top:1px solid var(--rule)}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--volt);margin-bottom:14px;font-weight:500}
+  .tag.fl{color:var(--flux)}
+  h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,4.5vw,38px);line-height:1.05;letter-spacing:-.015em}
+  h2 .cu{color:var(--copper)} h2 .fl{color:var(--flux)}
+  .sec p{margin:18px 0;color:var(--paper);max-width:680px}
+  .sec p.dim{color:var(--paper-dim)}
+  .sec p b{color:var(--paper);font-weight:600}
+  .sec p .cur{color:var(--current);font-weight:500} .sec p .vlt{color:var(--volt);font-weight:500} .sec p .cu{color:var(--copper);font-weight:500} .sec p .fl{color:var(--flux);font-weight:500}
+  .pull{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(20px,3vw,27px);line-height:1.35;color:var(--copper);margin:30px 0;padding-left:20px;border-left:3px solid var(--copper-dim)}
+  .pull.fl{color:var(--flux);border-left-color:var(--flux-dim)}
+  code{font-family:'IBM Plex Mono',monospace;font-size:.85em;color:var(--volt);background:#13120d;padding:2px 7px;border-radius:5px}
+  .flag{font-family:'Newsreader';font-size:15.5px;color:var(--paper-dim);font-style:italic;margin:18px 0;padding:14px 18px;background:#13120d66;border:1px solid var(--rule);border-radius:8px}
+  .flag b{color:var(--rose);font-style:normal;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .inst{margin:30px 0;border:1px solid var(--grid);border-radius:14px;overflow:hidden;background:var(--slate)}
+  .inst.fl{border-color:#3a2f54}
+  .inst-bar{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--grid);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-dim)}
+  .inst-bar .led{width:9px;height:9px;border-radius:50%;background:var(--copper);box-shadow:0 0 8px var(--copper)}
+  .inst.fl .inst-bar .led{background:var(--flux);box-shadow:0 0 8px var(--flux)}
+  .inst-bar .ttl{color:var(--copper)} .inst.fl .inst-bar .ttl{color:var(--flux)}
+  canvas{display:block;width:100%;height:auto;background:var(--scope)}
+  .ctrls{padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;border-top:1px solid var(--grid)}
+  .ctrl{display:flex;flex-direction:column;gap:6px;flex:1;min-width:150px}
+  .ctrl label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-dim)}
+  .ctrl label .val{color:var(--current);float:right}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--grid);outline:none;width:100%}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--copper);cursor:pointer;box-shadow:0 0 8px var(--copper-dim)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:var(--copper);cursor:pointer}
+  .segs{display:flex;gap:6px;flex-wrap:wrap}
+  .seg{font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 12px;border:1px solid var(--grid);border-radius:8px;background:var(--panel);color:var(--paper-dim);cursor:pointer;touch-action:manipulation}
+  .seg.on{border-color:var(--copper);color:var(--copper);background:rgba(224,168,104,.1)}
+  .readout{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--paper-dim);padding:0 18px 16px;line-height:1.6}
+  .readout b{color:var(--volt)} .readout .cur{color:var(--current)} .readout .fl{color:var(--flux)} .readout .cu{color:var(--copper)}
+  .foot{padding:50px 0 80px;border-top:1px solid var(--rule);margin-top:40px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--paper-dim);line-height:2}
+  .foot b{color:var(--copper)}
+  .next{margin:30px 0;padding:20px;border:1px solid var(--grid);border-radius:12px}
+  .next .nt{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:10px}
+  .next ol{margin:0;padding-left:22px;color:var(--paper-dim);font-size:15.5px;line-height:1.9}
+  .next ol li b{color:var(--paper)} .next ol li.done{color:var(--copper)}
+  @media (max-width:560px){body{font-size:17px}.ctrl{min-width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Toroids as Keepers <span class="s">·</span> Paper II — The Magnetic Channel</div>
+    <h1>Hold the steady.<br>Cross the <span class="fl">gap</span>.</h1>
+    <p class="lede">Paper I gave the one behaviour: a toroid resists <span class="cu">change</span> in current, ignores steady flow. Now watch that single trick do three jobs — <b>pass the DC, block the wiggle</b>, <b>choose which changes pass</b>, and <b>send a signal across a gap with no connection at all</b> — each one the magnetic mirror of a capacitor job.</p>
+    <div class="recall"><span class="v">v</span> <span class="c">=</span> <span class="c">L</span> · <span class="c">d</span><span class="i">i</span><span class="c">/dt</span></div>
+    <div class="recall-cap">still the only law · every instrument below is this, wearing a different coat</div>
+  </header>
+
+  <!-- INSTRUMENT 3: THE CHOKE / LR FILTER -->
+  <section class="sec">
+    <div class="tag cu">§5 · instrument three</div>
+    <h2>The choke — <span class="cu">pass the steady, block the wiggle</span></h2>
+    <p>The dual of the coupling cap. Put a toroid <em>in series</em> with a signal and it does the mirror of what the cap did: it passes the part that <b>isn't moving</b> and fights the part that is. Steady current (DC, the supply rail) sails through — to DC the coil is wire. Fast wiggles (ripple, noise, RF) hit its <span class="vlt">rising impedance</span> and are choked off. That's a <b>choke</b>: the part in every power supply that lets the clean DC through and strands the noise. Pair it with a resistor and the dividing line becomes tunable — the <b>LR filter</b>, cutoff <code>fc = R/(2πL)</code>.</p>
+
+    <div class="inst">
+      <div class="inst-bar"><span class="led"></span><span class="ttl">THE CHOKE / LR FILTER</span> · gain vs frequency · the dual of the RC filter</div>
+      <canvas id="filter"></canvas>
+      <div class="ctrls">
+        <div class="ctrl" style="flex:2;min-width:100%"><label>filter type</label>
+          <div class="segs" id="fType">
+            <div class="seg on" data-t="lp">low-pass (the choke — pass DC)</div>
+            <div class="seg" data-t="hp">high-pass (pass the wiggle)</div>
+          </div></div>
+        <div class="ctrl"><label>cutoff fc <span class="val" id="fFval">160 Hz</span></label>
+          <input type="range" id="fCut" min="20" max="2000" step="10" value="160"></div>
+        <div class="ctrl"><label>test tone <span class="val" id="fTval">160 Hz</span></label>
+          <input type="range" id="fTone" min="20" max="2000" step="10" value="160"></div>
+      </div>
+      <div class="readout" id="fRead">the curve is the filter's gain at every frequency · the <span class="cur">marker</span> is your test tone · at fc the gain is 0.707 (−3 dB). a series toroid is naturally a <b>low-pass</b> — it passes the steady and blocks the fast.</div>
+    </div>
+    <p class="pull">The cap stripped the bias and kept the message. The toroid keeps the bias and strips the wiggle — the same corner, walked the other way. One is the other's mirror.</p>
+  </section>
+
+  <!-- INSTRUMENT 4: THE TRANSFORMER -->
+  <section class="sec">
+    <div class="tag fl">§6 · instrument four · the signature</div>
+    <h2>The transformer — <span class="fl">a message across a gap, magnetic</span></h2>
+    <p>Here is the dual of Maxwell's gap. The cap's signature was displacement current: a changing <em>electric</em> field carrying a signal across empty space, no charge crossing. The toroid's signature is its exact mirror — <b>Faraday's law</b>: a changing <em>magnetic</em> field carrying a signal across a gap, <b>no current crossing.</b> Wind a second coil on the same ring. A changing current in the first makes a changing flux in the core; that changing flux induces a voltage in the second — <code>v₂ = M·di₁/dt</code> — and the two windings are not electrically connected at all. The message leaps the gap on the field, and only the <span class="cu">change</span> makes it across.</p>
+
+    <div class="inst fl">
+      <div class="inst-bar"><span class="led"></span><span class="ttl">THE TRANSFORMER</span> · primary ↔ secondary · v₂ = M·di₁/dt across the core</div>
+      <canvas id="xfmr"></canvas>
+      <div class="ctrls">
+        <div class="ctrl"><label>drive frequency <span class="val" id="xFval">1.0×</span></label>
+          <input type="range" id="xFreq" min="0.3" max="3" step="0.05" value="1"></div>
+        <div class="ctrl"><label>turns ratio N₂/N₁ <span class="val" id="xRval">1.0×</span></label>
+          <input type="range" id="xRatio" min="0.4" max="2.5" step="0.05" value="1"></div>
+      </div>
+      <div class="readout" id="xRead"><span class="cur">primary current</span> changes → <span class="fl">flux</span> in the core changes → a <span class="vlt">voltage</span> appears on the secondary = M·di₁/dt. nothing electrical connects the two coils. the turns ratio scales the voltage. hold the drive steady → flux steady → secondary reads zero.</div>
+    </div>
+    <p class="pull fl">No current crosses between the coils. The changing field carries the message — Faraday, the exact mirror of Maxwell's displacement current. The wire between was never needed; the change was.</p>
+    <div class="flag"><b>honest flag</b>This is the ideal transformer (perfect coupling, no leakage inductance, no core loss, no winding resistance). Real toroidal transformers couple tightly because the core keeps the flux inside the ring, but they still have leakage, saturation, and copper loss; a transformer also passes only AC — it cannot send DC across, which is the dual of the cap blocking DC. <code>v₂ = M·di₁/dt</code> and the turns-ratio law <code>v₂/v₁ = N₂/N₁</code> are exact; the front-end and loading are the engineering not drawn.</p>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="sec">
+    <div class="tag">§7 · the channel, complete</div>
+    <h2>One law, a whole <span class="cu">magnetic kit</span></h2>
+    <p>Four instruments, one equation. The core held a state; the inductor proved voltage follows the slope; the choke passed the steady and stripped the wiggle; the LR filter chose which changes; and the transformer carried a message across a gap with no connection. Every one was <code>v = L·di/dt</code> pointed at a different job — the magnetic mirror of David's communications kit.</p>
+    <div class="next">
+      <div class="nt">the keepers series · the channel, complete</div>
+      <ol>
+        <li class="done"><b>The core</b> — Φ = L·I ✓</li>
+        <li class="done"><b>The inductor</b> — v = L·di/dt ✓</li>
+        <li class="done"><b>The choke / LR filter</b> — pass DC, block the wiggle ✓</li>
+        <li class="done"><b>The transformer</b> — a message across a gap, magnetic (Faraday) ✓</li>
+      </ol>
+    </div>
+    <p class="dim">Next: the cap turned to face time and the world (memory, sensing); the toroid does the dual — energy held against the leak, and the world's current written straight into the flux. Then the coldest loop, and the marriage.</p>
+  </section>
+
+  <div class="foot">
+    TOROIDS AS KEEPERS · PAPER II — THE MAGNETIC CHANNEL · the dual of Capacitors as Communicators II<br>
+    the one law: <b>v = L·di/dt</b> · the transformer = Faraday's v₂ = M·di₁/dt, the mirror of displacement current<br>
+    LR cutoff fc = R/(2πL) · turns ratio v₂/v₁ = N₂/N₁ · written by AVAN, copper = the wound core<br>
+    no current crosses between the coils — the changing field does
+  </div>
+
+</div>
+
+<script>
+"use strict";
+const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const COL={scope:"#0a0d10",grid:"#2a2418",copper:"#e0a868",copperDim:"#7a5a32",
+  current:"#f0c45a",volt:"#6fc6d0",flux:"#a98fe0",paper:"#a89a86"};
+function setup(cv,ratio){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const cssW=cv.parentElement.clientWidth, cssH=Math.round(cssW*ratio);
+  cv.width=cssW*dpr; cv.height=cssH*dpr; cv.style.height=cssH+"px";
+  const ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,W:cssW,H:cssH};
+}
+function gridlines(ctx,W,H){ ctx.strokeStyle=COL.grid;ctx.lineWidth=1;
+  for(let x=0;x<=W;x+=W/12){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<=H;y+=H/8){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();} }
+function glow(ctx,pts,gx,gy,color,gw){ ctx.shadowColor=color;ctx.shadowBlur=gw||8;
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();
+  pts.forEach((o,k)=>{const x=gx(o,k),y=gy(o,k);k?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.stroke();ctx.shadowBlur=0; }
+
+/* ── (3) THE CHOKE / LR FILTER ── */
+(function(){
+  const cv=document.getElementById("filter");
+  const Cut=document.getElementById("fCut"),Tone=document.getElementById("fTone");
+  const Fv=document.getElementById("fFval"),Tv=document.getElementById("fTval");
+  const seg=document.getElementById("fType"),read=document.getElementById("fRead");
+  let type="lp";
+  seg.querySelectorAll(".seg").forEach(s=>s.onclick=()=>{type=s.dataset.t;seg.querySelectorAll(".seg").forEach(o=>o.classList.toggle("on",o===s));});
+  let d=setup(cv,0.56); window.addEventListener("resize",()=>d=setup(cv,0.56));
+  const fmin=20,fmax=2000;
+  const xf=f=>(Math.log(f)-Math.log(fmin))/(Math.log(fmax)-Math.log(fmin));
+  function gain(f,fc){const r=f/fc;return type==="lp"?1/Math.sqrt(1+r*r):r/Math.sqrt(1+r*r);}
+  function draw(){
+    const {ctx,W,H}=d; const fc=parseFloat(Cut.value),tone=parseFloat(Tone.value);
+    Fv.textContent=Math.round(fc)+" Hz"; Tv.textContent=Math.round(tone)+" Hz";
+    ctx.clearRect(0,0,W,H); gridlines(ctx,W,H);
+    const padL=40,padR=16,padT=14,padB=26,plotW=W-padL-padR,plotH=H-padT-padB;
+    const X=f=>padL+plotW*xf(f), Y=g=>padT+plotH*(1-g);
+    ctx.fillStyle="#6a5e44";ctx.font="10px 'IBM Plex Mono',monospace";ctx.textBaseline="top";
+    [20,100,1000,2000].forEach(f=>{ctx.textAlign="center";ctx.fillText(f>=1000?(f/1000)+"k":f,X(f),H-padB+6);});
+    ctx.textAlign="left";ctx.fillText("gain",4,padT);
+    ctx.setLineDash([3,4]);ctx.strokeStyle="#3a3320";ctx.beginPath();ctx.moveTo(padL,Y(0.707));ctx.lineTo(W-padR,Y(0.707));ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle="#6a5e44";ctx.textAlign="right";ctx.fillText("−3dB",W-padR,Y(0.707)-12);
+    ctx.strokeStyle=COL.copperDim;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(X(fc),padT);ctx.lineTo(X(fc),H-padB);ctx.stroke();
+    ctx.fillStyle=COL.copper;ctx.textAlign="center";ctx.fillText("fc",X(fc),padT);
+    const pts=[];for(let f=fmin;f<=fmax;f*=1.03)pts.push({f,g:gain(f,fc)});
+    glow(ctx,pts,o=>X(o.f),o=>Y(o.g),COL.copper,8);
+    const g=gain(tone,fc);
+    ctx.fillStyle=COL.current;ctx.beginPath();ctx.arc(X(tone),Y(g),5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle="#5a4a2a";ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(X(tone),Y(g));ctx.lineTo(X(tone),H-padB);ctx.stroke();ctx.setLineDash([]);
+    read.innerHTML=`gain at your <span class="cur">${Math.round(tone)} Hz</span> tone: <b>${g.toFixed(3)}</b> (${(20*Math.log10(g)).toFixed(1)} dB) — ${g>0.707?"passing":"choked"}. cutoff fc=${Math.round(fc)}Hz (fc=R/2πL). a series toroid naturally passes the steady, chokes the fast.`;
+    requestAnimationFrame(draw);
+  } requestAnimationFrame(draw);
+})();
+
+/* ── (4) THE TRANSFORMER ── */
+(function(){
+  const cv=document.getElementById("xfmr");
+  const Fr=document.getElementById("xFreq"),Ra=document.getElementById("xRatio");
+  const Fv=document.getElementById("xFval"),Rv=document.getElementById("xRval");
+  const read=document.getElementById("xRead");
+  let d=setup(cv,0.6); window.addEventListener("resize",()=>d=setup(cv,0.6));
+  function draw(t){
+    const {ctx,W,H}=d; const fr=parseFloat(Fr.value),ratio=parseFloat(Ra.value);
+    Fv.textContent=fr.toFixed(1)+"×"; Rv.textContent=ratio.toFixed(1)+"×";
+    ctx.clearRect(0,0,W,H); gridlines(ctx,W,H);
+    const cx=W*0.30, cy=H*0.42, R=Math.min(W,H)*0.20, r=R*0.42;
+    const tt=reduce?0.4:t;
+    const i1=Math.sin(tt*1.7*fr);                 // primary current
+    const di1=Math.cos(tt*1.7*fr)*1.7*fr;          // its rate
+    const flux=i1;                                 // flux ∝ primary current
+    const v2=di1*ratio;                            // secondary voltage = M di1/dt × ratio
+    // core ring
+    ctx.strokeStyle="#3a3320";ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(cx,cy,R+r,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(cx,cy,R-r,0,Math.PI*2);ctx.stroke();
+    // primary windings (left side), secondary (right side)
+    function winding(a0,a1,col,n){for(let k=0;k<n;k++){const a=a0+(a1-a0)*(k/(n-1));
+      const ox=cx+Math.cos(a)*R, oy=cy+Math.sin(a)*R;
+      ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(ox,oy,r*1.3,r*0.5,a,0,Math.PI*2);ctx.stroke();}}
+    winding(Math.PI*0.6,Math.PI*1.4,`rgba(240,196,90,.7)`,6);                 // primary, left
+    winding(-Math.PI*0.4,Math.PI*0.4,`rgba(111,198,208,.7)`,Math.round(6*ratio)); // secondary, right
+    // circulating flux (brightness ∝ |i1|, direction ∝ sign)
+    const nA=10, mag=Math.abs(flux), pol=Math.sign(flux)||1;
+    for(let k=0;k<nA;k++){const a=(k/nA)*Math.PI*2 + (reduce?0:pol*t*0.9);
+      const ax=cx+Math.cos(a)*R, ay=cy+Math.sin(a)*R;
+      ctx.fillStyle=`rgba(169,143,224,${0.18+0.6*mag})`;
+      ctx.save();ctx.translate(ax,ay);ctx.rotate(a+(pol>0?Math.PI/2:-Math.PI/2));
+      ctx.beginPath();ctx.moveTo(0,-4);ctx.lineTo(3,3);ctx.lineTo(-3,3);ctx.closePath();ctx.fill();ctx.restore();}
+    ctx.fillStyle=COL.current;ctx.font="10px 'IBM Plex Mono',monospace";ctx.textAlign="center";
+    ctx.fillText("PRIMARY i₁",cx,cy+R+r+16);
+    ctx.fillStyle=COL.volt;ctx.fillText("SECONDARY v₂",cx,cy-R-r-10);
+    ctx.fillStyle=COL.flux;ctx.fillText("Φ (no current crosses)",cx,cy);
+    // scope right: i1 (amber) and v2 (cyan)
+    const sx=W*0.6, sw=W*0.34, sh=H*0.7, sy=H*0.14;
+    ctx.strokeStyle="#3a3320";ctx.lineWidth=1;ctx.strokeRect(sx,sy,sw,sh);
+    const midI=sy+sh*0.28, midV=sy+sh*0.72, amp=sh*0.16;
+    ctx.fillStyle=COL.current;ctx.font="10px 'IBM Plex Mono',monospace";ctx.textAlign="left";ctx.fillText("primary i₁",sx+6,sy+12);
+    ctx.fillStyle=COL.volt;ctx.fillText("secondary v₂ = M·di₁/dt",sx+6,sy+sh*0.5+8);
+    const N=120,pts=[];
+    for(let k=0;k<=N;k++){const ph=tt-(1-k/N)*2.2;const ii=Math.sin(ph*1.7*fr);const vv=Math.cos(ph*1.7*fr)*1.7*fr*ratio;pts.push({x:sx+sw*(k/N),i:ii,v:vv});}
+    const vMax=Math.max(...pts.map(o=>Math.abs(o.v)),0.5);
+    glow(ctx,pts,o=>o.x,o=>midI-o.i*amp,COL.current,6);
+    glow(ctx,pts,o=>o.x,o=>midV-(o.v/vMax)*amp,COL.volt,6);
+    requestAnimationFrame(draw);
+  } requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
